@@ -70,3 +70,16 @@ func (d *DynamoDB) Update(mineral *domain.Mineral) error {
 	_, err = d.db.PutItem(putReq)
 	return err
 }
+
+func (d *DynamoDB) Delete(mineralID string) error {
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			keyID: {
+				S: aws.String(mineralID),
+			},
+		},
+		TableName: aws.String(d.MineralTable),
+	}
+	_, err := d.db.DeleteItem(input)
+	return err
+}

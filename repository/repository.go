@@ -28,6 +28,10 @@ type MineralUpdateStateIFace interface {
 	Update(mineral *domain.Mineral) error
 }
 
+type MineralDeleteIFace interface {
+	Delete(mineralID string) error
+}
+
 type DynamoDB struct {
 	db           *dynamodb.DynamoDB
 	MineralTable string

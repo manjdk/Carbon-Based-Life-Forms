@@ -34,6 +34,7 @@ func main() {
 
 	createMineralUC := usecase.NewCreateMineralUC(db)
 	getMineralByIDUC := usecase.NewGetMineralUC(db)
+	deleteMineralUC := usecase.NewDeleteMineralUC(db)
 	getAllMineralsUC := usecase.NewGetAllMineralUC(db)
 	meltMineralUC := usecase.NewMeltMineralUC(db, db)
 	condenseMineralUC := usecase.NewCondenseMineralUC(db, db)
@@ -44,6 +45,7 @@ func main() {
 	router.HandleFunc("/minerals", controller.CreateMineralFactory(createMineralUC)).Methods(http.MethodPost)
 	router.HandleFunc("/minerals", controller.GetMineralsFactory(getAllMineralsUC)).Methods(http.MethodGet)
 	router.HandleFunc("/minerals/{mineralId}", controller.GetMineralFactory(getMineralByIDUC)).Methods(http.MethodGet)
+	router.HandleFunc("/minerals/{mineralId}", controller.DeleteMineralFactory(deleteMineralUC)).Methods(http.MethodDelete)
 
 	go factorySQSClient.RunFactoryConsumer(
 		meltMineralUC,

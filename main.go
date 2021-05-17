@@ -33,6 +33,7 @@ func main() {
 	router.HandleFunc("/minerals", controller.CreateMineral(httpClient, cfg.ManagerURL)).Methods(http.MethodPost)
 	router.HandleFunc("/minerals", controller.GetMinerals(httpClient, cfg.ManagerURL)).Methods(http.MethodGet)
 	router.HandleFunc("/minerals/{mineralId}", controller.GetMineral(httpClient, cfg.ManagerURL)).Methods(http.MethodGet)
+	router.HandleFunc("/minerals/{mineralId}", controller.DeleteMineral(httpClient, cfg.ManagerURL)).Methods(http.MethodDelete)
 	router.HandleFunc("/minerals", controller.UpdateMineral(factorySQSClient)).Methods(http.MethodPut)
 
 	log.InfoZ("noTraceID").Msg("App is running")

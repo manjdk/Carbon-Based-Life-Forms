@@ -42,6 +42,7 @@ func main() {
 	router.HandleFunc("/minerals", controller.CreateMineralManager(httpClient, cfg.FactoryURL)).Methods(http.MethodPost)
 	router.HandleFunc("/minerals", controller.GetMineralsManager(httpClient, cfg.FactoryURL)).Methods(http.MethodGet)
 	router.HandleFunc("/minerals/{mineralId}", controller.GetMineralManager(httpClient, cfg.FactoryURL)).Methods(http.MethodGet)
+	router.HandleFunc("/minerals/{mineralId}", controller.DeleteMineralManager(httpClient, cfg.FactoryURL)).Methods(http.MethodDelete)
 
 	go managerSQSClient.RunManagerConsumer(factorySQSClient)
 
