@@ -1,6 +1,8 @@
 package controller
 
-import "github.com/manjdk/Carbon-Based-Life-Forms/domain"
+import (
+	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
+)
 
 type mineralStateUpdateRequest struct {
 	MineralID string `json:"mineralId"`

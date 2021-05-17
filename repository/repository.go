@@ -4,8 +4,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
 	"github.com/manjdk/Carbon-Based-Life-Forms/config"
-	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
 )
 
 const (

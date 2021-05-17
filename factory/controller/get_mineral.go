@@ -4,12 +4,11 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/gorilla/mux"
+	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain/usecase"
+	"github.com/manjdk/Carbon-Based-Life-Forms/custom_http"
 	"github.com/manjdk/Carbon-Based-Life-Forms/error"
 	"github.com/manjdk/Carbon-Based-Life-Forms/log"
-
-	"github.com/gorilla/mux"
-	"github.com/manjdk/Carbon-Based-Life-Forms/custom_http"
-	"github.com/manjdk/Carbon-Based-Life-Forms/domain/usecase"
 )
 
 func GetMineralFactory(getUC usecase.GetMineralUC) http.HandlerFunc {

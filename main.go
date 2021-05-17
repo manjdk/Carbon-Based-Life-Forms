@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/manjdk/Carbon-Based-Life-Forms/client/controller"
+	"github.com/manjdk/Carbon-Based-Life-Forms/api/controller"
 	"github.com/manjdk/Carbon-Based-Life-Forms/config"
 	"github.com/manjdk/Carbon-Based-Life-Forms/custom_http"
 	"github.com/manjdk/Carbon-Based-Life-Forms/log"

@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain/usecase"
 	"github.com/manjdk/Carbon-Based-Life-Forms/config"
-	"github.com/manjdk/Carbon-Based-Life-Forms/domain/usecase"
 	"github.com/manjdk/Carbon-Based-Life-Forms/factory/controller"
 	"github.com/manjdk/Carbon-Based-Life-Forms/log"
 	"github.com/manjdk/Carbon-Based-Life-Forms/queue"
