@@ -21,7 +21,7 @@ func CreateMineralManager(httpClient custom_http.CallClientIFace, factoryURL str
 			return
 		}
 
-		responseBytes, statusCode, err := httpClient.Call(traceID, http.MethodPost, factoryURL, requestBytes)
+		responseBytes, statusCode, err := httpClient.Call(traceID, http.MethodPost, factoryURL, nil, requestBytes)
 		if err != nil {
 			log.ErrorZ(traceID, err).Msg("Request to create mineral failed in manager")
 			custom_http.NewResponse(w, http.StatusFailedDependency, error.NewErrorMessage(err))

@@ -24,7 +24,7 @@ func DeleteMineralManager(httpClient custom_http.CallClientIFace, factoryURL str
 		}
 
 		url := fmt.Sprintf("%s/%s", factoryURL, mineralID)
-		_, statusCode, err := httpClient.Call(traceID, http.MethodDelete, url, nil)
+		_, statusCode, err := httpClient.Call(traceID, http.MethodDelete, url, nil, nil)
 		if err != nil {
 			log.ErrorZ(traceID, err).
 				Str("url", url).

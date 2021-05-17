@@ -35,7 +35,7 @@ func main() {
 	createMineralUC := usecase.NewCreateMineralUC(db)
 	getMineralByIDUC := usecase.NewGetMineralUC(db)
 	deleteMineralUC := usecase.NewDeleteMineralUC(db)
-	getAllMineralsUC := usecase.NewGetAllMineralUC(db)
+	getAllMineralsUC := usecase.NewGetAllMineralUC(db, db)
 	meltMineralUC := usecase.NewMeltMineralUC(db, db)
 	condenseMineralUC := usecase.NewCondenseMineralUC(db, db)
 	fractureMineralUC := usecase.NewFractureMineralUC(db, db)

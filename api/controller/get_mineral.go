@@ -25,7 +25,7 @@ func GetMineral(httpClient custom_http.CallClientIFace, managerURL string) http.
 		}
 
 		url := fmt.Sprintf("%s/%s", managerURL, mineralID)
-		responseBytes, statusCode, err := httpClient.Call(traceID, http.MethodGet, url, nil)
+		responseBytes, statusCode, err := httpClient.Call(traceID, http.MethodGet, url, nil, nil)
 		if err != nil {
 			log.ErrorZ(traceID, err).
 				Str("url", url).

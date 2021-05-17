@@ -10,11 +10,20 @@ import (
 	"github.com/manjdk/Carbon-Based-Life-Forms/log"
 )
 
+const (
+	queryClientID = "clientId"
+)
+
 func GetMinerals(httpClient custom_http.CallClientIFace, managerURL string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		traceID := log.NewTraceID()
 
-		responseBytes, statusCode, err := httpClient.Call(traceID, http.MethodGet, managerURL, nil)
+		queryParams := make(map[string]string)
+		if clientID := r.URL.Query().Get(queryClientID); clientID != "" {
+			queryParams[queryClientID] = clientID
+		}
+
+		responseBytes, statusCode, err := httpClient.Call(traceID, http.MethodGet, managerURL, queryParams, nil)
 		if err != nil {
 			log.ErrorZ(traceID, err).Msg("Error when calling manager on get all minerals")
 			custom_http.NewResponse(w, http.StatusFailedDependency, error.NewErrorMessage(err))

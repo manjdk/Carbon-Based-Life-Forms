@@ -9,11 +9,15 @@ import (
 	"github.com/manjdk/Carbon-Based-Life-Forms/log"
 )
 
+const (
+	queryClientID = "clientId"
+)
+
 func GetMineralsFactory(getAllUC usecase.GetAllMineralUC) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		traceID := r.Header.Get(custom_http.HeaderXTraceID)
 
-		minerals, err := getAllUC.GetAll()
+		minerals, err := getAllUC.GetAll(r.URL.Query().Get(queryClientID))
 		if err != nil {
 			log.ErrorZ(traceID, err).Msg("Failed to get minerals in factory")
 			custom_http.NewResponse(w, http.StatusInternalServerError, error.NewErrorMessage(err))

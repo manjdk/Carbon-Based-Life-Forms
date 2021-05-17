@@ -17,7 +17,7 @@ const (
 )
 
 type CallClientIFace interface {
-	Call(traceID, method, url string, body []byte) ([]byte, int, error)
+	Call(traceID, method, url string, queryParams map[string]string, body []byte) ([]byte, int, error)
 }
 
 type HttpClient struct {
@@ -30,7 +30,7 @@ func NewHttpClient(client *http.Client) *HttpClient {
 	}
 }
 
-func (h *HttpClient) Call(traceID, method, url string, body []byte) ([]byte, int, error) {
+func (h *HttpClient) Call(traceID, method, url string, queryParams map[string]string, body []byte) ([]byte, int, error) {
 	req, err := http.NewRequest(method, url, bytes.NewReader(body))
 	if err != nil {
 		log.ErrorZ(traceID, err).
@@ -41,6 +41,7 @@ func (h *HttpClient) Call(traceID, method, url string, body []byte) ([]byte, int
 	}
 
 	addTraceIDToRequest(req, traceID)
+	addQueryParameters(req, queryParams)
 	response, err := h.client.Do(req)
 	if err != nil {
 		log.ErrorZ(traceID, err).Msg("Failed to do a call")
@@ -61,6 +62,14 @@ func (h *HttpClient) Call(traceID, method, url string, body []byte) ([]byte, int
 	}
 
 	return responseBytes, response.StatusCode, nil
+}
+
+func addQueryParameters(req *http.Request, queryParams map[string]string) {
+	q := req.URL.Query()
+	for key, val := range queryParams {
+		q.Add(key, val)
+	}
+	req.URL.RawQuery = q.Encode()
 }
 
 func addTraceIDToRequest(req *http.Request, traceID string) {

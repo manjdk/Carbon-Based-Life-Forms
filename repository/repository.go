@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	keyID = "id"
+	keyID         = "id"
+	clientIDIndex = "clientId"
 )
 
 type MineralCreateIFace interface {
@@ -18,6 +19,10 @@ type MineralCreateIFace interface {
 
 type MineralsGetIFace interface {
 	GetAll() ([]domain.Mineral, error)
+}
+
+type MineralsGetByClientIDIFace interface {
+	GetByClientID(clientID string) ([]domain.Mineral, error)
 }
 
 type MineralGetByIDIFace interface {

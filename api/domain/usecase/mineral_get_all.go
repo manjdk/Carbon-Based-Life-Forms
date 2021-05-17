@@ -6,15 +6,25 @@ import (
 )
 
 type GetAllMineralUC struct {
-	GetAllOP repository.MineralsGetIFace
+	GetAllOP        repository.MineralsGetIFace
+	GetByClientIDOP repository.MineralsGetByClientIDIFace
 }
 
-func NewGetAllMineralUC(getAllOP repository.MineralsGetIFace) GetAllMineralUC {
+func NewGetAllMineralUC(
+	getAllOP repository.MineralsGetIFace,
+	getByClientIDOP repository.MineralsGetByClientIDIFace,
+) GetAllMineralUC {
 	return GetAllMineralUC{
-		GetAllOP: getAllOP,
+		GetAllOP:        getAllOP,
+		GetByClientIDOP: getByClientIDOP,
 	}
 }
 
-func (m *GetAllMineralUC) GetAll() ([]domain.Mineral, error) {
-	return m.GetAllOP.GetAll()
+func (m *GetAllMineralUC) GetAll(clientID string) ([]domain.Mineral, error) {
+	switch clientID {
+	case "":
+		return m.GetAllOP.GetAll()
+	default:
+		return m.GetByClientIDOP.GetByClientID(clientID)
+	}
 }
