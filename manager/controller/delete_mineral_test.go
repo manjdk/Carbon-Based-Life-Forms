@@ -20,7 +20,6 @@ func TestDeleteMineralManager(t *testing.T) {
 	}
 	type want struct {
 		statusCode int
-		body       []byte
 	}
 	tests := []struct {
 		name string
@@ -48,7 +47,6 @@ func TestDeleteMineralManager(t *testing.T) {
 			},
 			want: want{
 				statusCode: http.StatusNoContent,
-				body:       []byte(`{"name":"tesName"}`),
 			},
 		},
 		{

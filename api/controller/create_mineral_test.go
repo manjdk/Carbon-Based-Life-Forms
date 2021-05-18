@@ -1,21 +1,23 @@
 package controller
 
 import (
+	"bytes"
 	"errors"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gorilla/mux"
-	"github.com/manjdk/Carbon-Based-Life-Forms/custom_http"
 	"github.com/manjdk/Carbon-Based-Life-Forms/mocks"
 	"github.com/stretchr/testify/mock"
+
+	"github.com/manjdk/Carbon-Based-Life-Forms/custom_http"
 )
 
-func TestGetMineralManager(t *testing.T) {
+func TestCreateMineral(t *testing.T) {
 	type args struct {
 		httpClient custom_http.CallClientIFace
-		urlVars    map[string]string
+		body       io.Reader
 	}
 	type want struct {
 		statusCode int
@@ -33,48 +35,55 @@ func TestGetMineralManager(t *testing.T) {
 					m.On(
 						"Call",
 						mock.AnythingOfType("string"),
-						http.MethodGet,
+						http.MethodPost,
 						mock.AnythingOfType("string"),
 						mock.AnythingOfType("map[string]string"),
-						[]byte(nil),
-					).Return([]byte(`{"name": "tesName"}`), http.StatusOK, nil)
+						mock.AnythingOfType("[]uint8"),
+					).Return([]byte(`{"name": "testName"}`), http.StatusCreated, nil)
 
 					return m
 				}(),
-				urlVars: map[string]string{"mineralId": "testID"},
+				body: bytes.NewReader([]byte(`{"clientId": "client", "state":"solid"}`)),
 			},
 			want: want{
-				statusCode: http.StatusOK,
+				statusCode: http.StatusCreated,
 			},
 		},
 		{
-			name: "no mineral ID passed",
+			name: "request body decode failure",
 			args: args{
-				httpClient: func() custom_http.CallClientIFace {
-					return &mocks.CallClientIFace{}
-				}(),
+				body: bytes.NewReader([]byte(`{"clientId": "client", "state":"solid`)),
 			},
 			want: want{
 				statusCode: http.StatusBadRequest,
 			},
 		},
 		{
-			name: "error response",
+			name: "unsupported mineral state",
+			args: args{
+				body: bytes.NewReader([]byte(`{"clientId": "client", "state":"wrongState"}`)),
+			},
+			want: want{
+				statusCode: http.StatusBadRequest,
+			},
+		},
+		{
+			name: "error from manager",
 			args: args{
 				httpClient: func() custom_http.CallClientIFace {
 					m := &mocks.CallClientIFace{}
 					m.On(
 						"Call",
 						mock.AnythingOfType("string"),
-						http.MethodGet,
+						http.MethodPost,
 						mock.AnythingOfType("string"),
 						mock.AnythingOfType("map[string]string"),
-						[]byte(nil),
-					).Return([]byte(nil), http.StatusTeapot, errors.New("some error"))
+						mock.AnythingOfType("[]uint8"),
+					).Return(nil, http.StatusFailedDependency, errors.New("some er"))
 
 					return m
 				}(),
-				urlVars: map[string]string{"mineralId": "testID"},
+				body: bytes.NewReader([]byte(`{"clientId": "client", "state":"solid"}`)),
 			},
 			want: want{
 				statusCode: http.StatusFailedDependency,
@@ -88,62 +97,58 @@ func TestGetMineralManager(t *testing.T) {
 					m.On(
 						"Call",
 						mock.AnythingOfType("string"),
-						http.MethodGet,
+						http.MethodPost,
 						mock.AnythingOfType("string"),
 						mock.AnythingOfType("map[string]string"),
-						[]byte(nil),
-					).Return([]byte(nil), http.StatusTeapot, nil)
+						mock.AnythingOfType("[]uint8"),
+					).Return([]byte(`{"name": "testName"}`), http.StatusOK, nil)
 
 					return m
 				}(),
-				urlVars: map[string]string{"mineralId": "testID"},
+				body: bytes.NewReader([]byte(`{"clientId": "client", "state":"solid"}`)),
 			},
 			want: want{
 				statusCode: http.StatusFailedDependency,
 			},
 		},
 		{
-			name: "wrong response body",
+			name: "default fractures for liquid",
 			args: args{
 				httpClient: func() custom_http.CallClientIFace {
 					m := &mocks.CallClientIFace{}
 					m.On(
 						"Call",
 						mock.AnythingOfType("string"),
-						http.MethodGet,
+						http.MethodPost,
 						mock.AnythingOfType("string"),
 						mock.AnythingOfType("map[string]string"),
-						[]byte(nil),
-					).Return([]byte(nil), http.StatusOK, nil)
+						mock.AnythingOfType("[]uint8"),
+					).Return([]byte(`{"name": "testName"}`), http.StatusCreated, nil)
 
 					return m
 				}(),
-				urlVars: map[string]string{"mineralId": "testID"},
+				body: bytes.NewReader([]byte(`{"clientId": "client", "state":"liquid"}`)),
 			},
 			want: want{
-				statusCode: http.StatusFailedDependency,
+				statusCode: http.StatusCreated,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			req, err := http.NewRequest(http.MethodGet, "/minerals", nil)
+			rr := httptest.NewRecorder()
+			req, err := http.NewRequest(http.MethodPost, "/minerals", tt.args.body)
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			if tt.args.urlVars != nil {
-				req = mux.SetURLVars(req, tt.args.urlVars)
-			}
-
-			rr := httptest.NewRecorder()
-
-			got := GetMineralManager(tt.args.httpClient, "testURL")
+			got := CreateMineral(tt.args.httpClient, "testURL")
 			got.ServeHTTP(rr, req)
 
 			if status := rr.Code; status != tt.want.statusCode {
 				t.Errorf("handler returned wrong status code: got %v want %v",
 					status, tt.want.statusCode)
+				return
 			}
 		})
 	}

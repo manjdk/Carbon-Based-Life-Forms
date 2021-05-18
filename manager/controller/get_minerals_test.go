@@ -1,28 +1,24 @@
 package controller
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/manjdk/Carbon-Based-Life-Forms/custom_http"
-	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
 	"github.com/manjdk/Carbon-Based-Life-Forms/mocks"
 	"github.com/stretchr/testify/mock"
 )
 
 func TestGetMineralsManager(t *testing.T) {
-	wantBytes, _ := json.Marshal([]domain.Mineral{{Name: "tesName"}})
-
 	type args struct {
 		httpClient custom_http.CallClientIFace
-		factoryURL string
+		urlValues  url.Values
 	}
 	type want struct {
 		statusCode int
-		body       []byte
 	}
 	tests := []struct {
 		name string
@@ -30,7 +26,7 @@ func TestGetMineralsManager(t *testing.T) {
 		want want
 	}{
 		{
-			name: "success",
+			name: "success empty clientID",
 			args: args{
 				httpClient: func() custom_http.CallClientIFace {
 					m := &mocks.CallClientIFace{}
@@ -38,22 +34,20 @@ func TestGetMineralsManager(t *testing.T) {
 						"Call",
 						mock.AnythingOfType("string"),
 						http.MethodGet,
-						"testURL",
-						make(map[string]string),
+						mock.AnythingOfType("string"),
+						mock.AnythingOfType("map[string]string"),
 						[]byte(nil),
-					).Return(wantBytes, http.StatusOK, nil)
+					).Return([]byte(`[{"name": "tesName"}]`), http.StatusOK, nil)
 
 					return m
 				}(),
-				factoryURL: "test",
 			},
 			want: want{
 				statusCode: http.StatusOK,
-				body:       wantBytes,
 			},
 		},
 		{
-			name: "wrong response status",
+			name: "success clientID given",
 			args: args{
 				httpClient: func() custom_http.CallClientIFace {
 					m := &mocks.CallClientIFace{}
@@ -61,22 +55,25 @@ func TestGetMineralsManager(t *testing.T) {
 						"Call",
 						mock.AnythingOfType("string"),
 						http.MethodGet,
-						"testURL",
-						make(map[string]string),
+						mock.AnythingOfType("string"),
+						mock.AnythingOfType("map[string]string"),
 						[]byte(nil),
-					).Return(wantBytes, http.StatusFailedDependency, nil)
+					).Return([]byte(`[{"name": "tesName"}]`), http.StatusOK, nil)
 
 					return m
 				}(),
-				factoryURL: "test",
+				urlValues: func() url.Values {
+					vals := url.Values{}
+					vals.Add("clientId", "clientId")
+					return vals
+				}(),
 			},
 			want: want{
-				statusCode: http.StatusFailedDependency,
-				body:       wantBytes,
+				statusCode: http.StatusOK,
 			},
 		},
 		{
-			name: "error response",
+			name: "failed with empty clientID",
 			args: args{
 				httpClient: func() custom_http.CallClientIFace {
 					m := &mocks.CallClientIFace{}
@@ -84,22 +81,20 @@ func TestGetMineralsManager(t *testing.T) {
 						"Call",
 						mock.AnythingOfType("string"),
 						http.MethodGet,
-						"testURL",
-						make(map[string]string),
+						mock.AnythingOfType("string"),
+						mock.AnythingOfType("map[string]string"),
 						[]byte(nil),
-					).Return(nil, http.StatusFailedDependency, errors.New("some error"))
+					).Return(nil, http.StatusFailedDependency, errors.New("some err"))
 
 					return m
 				}(),
-				factoryURL: "test",
 			},
 			want: want{
 				statusCode: http.StatusFailedDependency,
-				body:       wantBytes,
 			},
 		},
 		{
-			name: "wrong response body",
+			name: "failed with clientID given",
 			args: args{
 				httpClient: func() custom_http.CallClientIFace {
 					m := &mocks.CallClientIFace{}
@@ -107,30 +102,37 @@ func TestGetMineralsManager(t *testing.T) {
 						"Call",
 						mock.AnythingOfType("string"),
 						http.MethodGet,
-						"testURL",
-						make(map[string]string),
+						mock.AnythingOfType("string"),
+						mock.AnythingOfType("map[string]string"),
 						[]byte(nil),
-					).Return([]byte(`[{"id":"","clientId":"","name":"tesName","state":"","fractures":0]`), http.StatusOK, nil)
+					).Return(nil, http.StatusFailedDependency, errors.New("some err"))
 
 					return m
 				}(),
-				factoryURL: "test",
+				urlValues: func() url.Values {
+					vals := url.Values{}
+					vals.Add("clientId", "clientId")
+					return vals
+				}(),
 			},
 			want: want{
 				statusCode: http.StatusFailedDependency,
-				body:       nil,
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			rr := httptest.NewRecorder()
 			req, err := http.NewRequest(http.MethodGet, "/minerals", nil)
 			if err != nil {
 				t.Fatal(err)
 			}
-			rr := httptest.NewRecorder()
 
-			got := GetMineralsManager(tt.args.httpClient, "testURL")
+			if tt.args.urlValues != nil {
+				req.URL.RawQuery = tt.args.urlValues.Encode()
+			}
+
+			got := GetMineralsManager(tt.args.httpClient, "testID")
 			got.ServeHTTP(rr, req)
 
 			if status := rr.Code; status != tt.want.statusCode {

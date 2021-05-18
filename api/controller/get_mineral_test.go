@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func TestGetMineralManager(t *testing.T) {
+func TestGetMineral(t *testing.T) {
 	type args struct {
 		httpClient custom_http.CallClientIFace
 		urlVars    map[string]string
@@ -127,6 +127,7 @@ func TestGetMineralManager(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			rr := httptest.NewRecorder()
 			req, err := http.NewRequest(http.MethodGet, "/minerals", nil)
 			if err != nil {
 				t.Fatal(err)
@@ -136,9 +137,7 @@ func TestGetMineralManager(t *testing.T) {
 				req = mux.SetURLVars(req, tt.args.urlVars)
 			}
 
-			rr := httptest.NewRecorder()
-
-			got := GetMineralManager(tt.args.httpClient, "testURL")
+			got := GetMineral(tt.args.httpClient, "testURL")
 			got.ServeHTTP(rr, req)
 
 			if status := rr.Code; status != tt.want.statusCode {
