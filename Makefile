@@ -1,6 +1,4 @@
 deps:
-		go get github.com/golangci/golangci-lint/cmd/golangci-lint
-		go get -u github.com/go-swagger/go-swagger/cmd/swagger
 		go mod download
 
 test:
