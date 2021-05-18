@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -36,9 +38,12 @@ func main() {
 	router.HandleFunc("/minerals/{mineralId}", controller.DeleteMineral(httpClient, cfg.ManagerURL)).Methods(http.MethodDelete)
 	router.HandleFunc("/minerals", controller.UpdateMineral(factorySQSClient)).Methods(http.MethodPut)
 
-	log.InfoZ("noTraceID").Msg("App is running")
+	port := flag.String("p", "8181", "port number")
+	flag.Parse()
 
-	if err := http.ListenAndServe(":8181", router); err != nil {
+	log.InfoZ("noTraceID").Msgf("App is running. Port: %s", *port)
+
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", *port), router); err != nil {
 		log.FatalZ(err).Msg("Failed to run app client")
 	}
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -53,9 +55,11 @@ func main() {
 		fractureMineralUC,
 	)
 
-	log.InfoZ("NoTraceID").Msg("Factory is running")
+	port := flag.String("p", "8383", "port number")
+	flag.Parse()
+	log.InfoZ("NoTraceID").Msgf("Factory is running.Port: %s", *port)
 
-	if err := http.ListenAndServe(":8383", router); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", *port), router); err != nil {
 		log.FatalZ(err).Msg("Failed to run factory client")
 	}
 }

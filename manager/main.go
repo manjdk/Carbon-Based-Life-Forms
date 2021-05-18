@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -46,9 +48,11 @@ func main() {
 
 	go managerSQSClient.RunManagerConsumer(factorySQSClient)
 
-	log.InfoZ("NoTraceID").Msg("Manager is running")
+	port := flag.String("p", "8282", "port number")
+	flag.Parse()
+	log.InfoZ("NoTraceID").Msgf("Manager is running.Port: %s", *port)
 
-	if err := http.ListenAndServe(":8282", router); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", *port), router); err != nil {
 		log.FatalZ(err).Msg("Failed to run manager client")
 	}
 }
