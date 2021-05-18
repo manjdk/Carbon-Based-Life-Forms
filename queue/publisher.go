@@ -5,7 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
+	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
 )
 
 func (s *sqsClient) Publish(msg *domain.QueueMessage) error {

@@ -4,8 +4,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sqs"
-	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
-	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain/usecase"
+	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
+	"github.com/manjdk/Carbon-Based-Life-Forms/domain/usecase"
 )
 
 type SQSClientIFace interface {

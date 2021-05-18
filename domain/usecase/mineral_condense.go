@@ -3,7 +3,7 @@ package usecase
 import (
 	"fmt"
 
-	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
+	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
 	"github.com/manjdk/Carbon-Based-Life-Forms/repository"
 )
 

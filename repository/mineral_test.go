@@ -5,7 +5,7 @@ import (
 
 	"github.com/gofrs/uuid"
 	"github.com/google/go-cmp/cmp"
-	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
+	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
 	"github.com/stretchr/testify/assert"
 )
 

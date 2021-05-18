@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
+	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
 )
 
 func (d *DynamoDB) Create(mineral *domain.Mineral) error {

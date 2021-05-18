@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gofrs/uuid"
-	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
 	"github.com/manjdk/Carbon-Based-Life-Forms/custom_http"
+	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
 	"github.com/manjdk/Carbon-Based-Life-Forms/error"
 	"github.com/manjdk/Carbon-Based-Life-Forms/log"
 )

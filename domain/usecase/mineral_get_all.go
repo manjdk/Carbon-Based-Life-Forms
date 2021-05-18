@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/manjdk/Carbon-Based-Life-Forms/api/domain"
+	"github.com/manjdk/Carbon-Based-Life-Forms/domain"
 	"github.com/manjdk/Carbon-Based-Life-Forms/repository"
 )
 
