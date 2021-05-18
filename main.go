@@ -13,6 +13,11 @@ import (
 	"github.com/manjdk/Carbon-Based-Life-Forms/queue"
 )
 
+const (
+	swaggerDocFile = "./swagger/openapi.yml"
+	swaggerDocDir  = "./swagger"
+)
+
 func main() {
 	cfg, err := config.NewConfig("config")
 	if err != nil {
@@ -31,6 +36,9 @@ func main() {
 	httpClient := custom_http.NewHttpClient(http.DefaultClient)
 
 	router := mux.NewRouter().StrictSlash(true)
+
+	router.HandleFunc("/api-docs", controller.NewSwaggerHandler(swaggerDocFile)).Methods(http.MethodGet)
+	router.HandleFunc("/api/{name}", controller.NewReDocHandler(swaggerDocDir))
 
 	router.HandleFunc("/minerals", controller.CreateMineral(httpClient, cfg.ManagerURL)).Methods(http.MethodPost)
 	router.HandleFunc("/minerals", controller.GetMinerals(httpClient, cfg.ManagerURL)).Methods(http.MethodGet)

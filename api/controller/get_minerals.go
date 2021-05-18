@@ -48,6 +48,6 @@ func GetMinerals(httpClient custom_http.CallClientIFace, managerURL string) http
 			return
 		}
 
-		custom_http.NewResponse(w, statusCode, minerals)
+		custom_http.NewResponse(w, http.StatusOK, minerals)
 	}
 }
