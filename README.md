@@ -12,3 +12,4 @@ Steps to run a program:
 - use ` go run factory/main.go` to run factory (default port `:8383`)
 - in order to change default ports flag `-p` can be used. Example: `go run main.go -p 8000`
 - when `go run main.go` will be running, documentation can be found in WEB browser. Address `http://localhost:8181/api/doc.html`
+- `make test` runs all the unit tests
