@@ -1,0 +1,11 @@
+region: "eu-west-1"
+database_host: "http://localhost:8000"
+mineral_table: "Mineral"
+queue_factory:
+  name: "factory-events"
+  host: "http://localhost:4566"
+queue_manager:
+  name: "manager-events"
+  host: "http://localhost:4566"
+manager_client_url: "http://localhost:8282/minerals"
+factory_client_url: "http://localhost:8383/minerals"

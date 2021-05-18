@@ -1,0 +1,146 @@
+---
+swagger: '2.0'
+schemes:
+  - https
+info:
+  version: 1.0.0
+  title: Carbon Based Life Forms
+  description: API that allows crud actions on different minerals
+host: 127.0.0.1:8181
+basePath: "/"
+paths:
+  /minerals:
+    post:
+      tags:
+        - minerals
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      description: Create mineral
+      parameters:
+        - in: body
+          name: createMineralRequest
+          description: create mineral data
+          required: true
+          schema:
+            $ref: "#/definitions/Mineral"
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: "#/definitions/Mineral"
+        400:
+          description: Bad request
+        424:
+          description: Failed dependency
+        500:
+          description: Internal server error
+    get:
+      tags:
+        - minerals
+      produces:
+        - application/json
+      description: Get minerals
+      parameters:
+        - in: query
+          name: clientId
+          description: client ID
+          required: false
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Mineral"
+        424:
+          description: Failed dependency
+    put:
+      tags:
+        - minerals
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      description: Update mineral state
+      parameters:
+        - in: body
+          name: updateMineralStateRequest
+          description: update mineral state data
+          required: true
+          schema:
+            $ref: "#/definitions/StateRequest"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/StateRequest"
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+  /minerals/{mineralId}:
+    get:
+      tags:
+        - minerals
+      produces:
+        - application/json
+      description: Get mineral by ID
+      parameters:
+        - in: path
+          name: mineralId
+          description: mineral ID
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Mineral"
+        400:
+          description: Bad request
+        424:
+          description: Failed dependency
+    delete:
+      tags:
+        - minerals
+      produces:
+        - application/json
+      description: Delete mineral
+      parameters:
+        - in: path
+          name: mineralId
+          description: mineral ID
+          required: true
+          type: string
+      responses:
+        204:
+          description: No content
+        400:
+          description: Bad request
+        424:
+          description: Failed dependency
+definitions:
+  Mineral:
+    type: object
+    properties:
+      id:
+        type: string
+      clientId:
+        type: string
+      name:
+        type: string
+      state:
+        type: string
+      fractures:
+        type: number
+        format: integer
+  StateRequest:
+    type: object
+    properties:
+      mineralId:
+        type: string
+      action:
+        type: string

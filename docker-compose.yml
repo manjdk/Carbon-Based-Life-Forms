@@ -1,0 +1,15 @@
+version: "2.7"
+services:
+  dynamodb:
+    image: dwmkerr/dynamodb
+    ports:
+      - "8000:8000"
+
+  localstack:
+    image: localstack/localstack
+    environment:
+      - SERVICES=sqs:4566
+      - HOSTNAME_EXTERNAL=localhost
+      - HOSTNAME=localstack
+    ports:
+      - "4566:4566"
